@@ -1,0 +1,24 @@
+<group name="upi_fraud,">
+  <rule id="100001" level="3">
+    <match>UPI txn:</match>
+    <description>UPI transaction logged</description>
+  </rule>
+
+  <rule id="100002" level="10">
+    <if_sid>100001</if_sid>
+    <match>amount=</match>
+    <description>Suspicious transaction detected</description>
+    <mitre>
+      <id>T1133</id>
+    </mitre>
+  </rule>
+
+  <rule id="100003" level="14">
+    <if_sid>100001</if_sid>
+    <regex>amount=[0-9]{5,}</regex>
+    <description>Large Fraud detected</description>
+    <mitre>
+      <id>T1657</id>
+    </mitre>
+  </rule>
+</group>
