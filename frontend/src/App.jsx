@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react"
 
-const API = "http://127.0.0.1:8000"
-const WS  = "ws://127.0.0.1:8000/ws/alerts"
+const API = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"
+const WS = (import.meta.env.VITE_API_URL || "http://127.0.0.1:8000")
+  .replace("https://", "wss://")
+  .replace("http://", "ws://") + "/ws/alerts"
 
 const SEVERITY_COLOR = {
   critical: { bg: "#2d1b1b", border: "#ef4444", text: "#f87171", badge: "#ef4444" },
