@@ -10,6 +10,8 @@ from fastapi.responses import StreamingResponse
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from io import BytesIO
+from app.services.slack_service import send_slack_alert
+from app.services.abuseip_service import lookup_ip
 import json
 
 router = APIRouter(prefix="/api/v1/alerts", tags=["alerts"])
@@ -26,7 +28,7 @@ class AlertCreate(BaseModel):
     shap_json: Optional[str] = None
 
 class AlertUpdate(BaseModel):
-    status: str  # open, investigating, resolved
+    status: str  
 
 @router.get("/")
 def get_alerts(skip: int = 0, limit: int = 50, db: Session = Depends(get_db)):
@@ -35,10 +37,19 @@ def get_alerts(skip: int = 0, limit: int = 50, db: Session = Depends(get_db)):
 
 @router.post("/")
 def create_alert(alert: AlertCreate, db: Session = Depends(get_db)):
-    db_alert = Alert(**alert.dict())
+    db_alert = Alert(**alert.model_dump())
+
+    abuse_data = lookup_ip(alert.ip_address)
+    if abuse_data:
+        db_alert.abuse_score = abuse_data["abuse_score"]
+        db_alert.country = abuse_data["country"]
+        db_alert.isp = abuse_data["isp"]
+
     db.add(db_alert)
     db.commit()
     db.refresh(db_alert)
+    if db_alert.severity.lower() in ("critical", "high"):
+        send_slack_alert(db_alert)
     return db_alert
 
 @router.get("/{alert_id}")

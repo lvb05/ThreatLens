@@ -43,6 +43,8 @@ def generate_features(force_fraud=False):
 async def run_simulator(manager, db_session_factory):
     from app.models.alert import Alert
     from app.services.ml_service import ml_service
+    from app.services.abuseip_service import lookup_ip
+    from app.services.slack_service import send_slack_alert
 
     get_fraud_samples()  # preload
     print("[Simulator] Started — using real fraud samples from dataset...")
@@ -66,6 +68,8 @@ async def run_simulator(manager, db_session_factory):
 
                 db = db_session_factory()
                 try:
+                    ip = random.choice(FAKE_IPS)
+                    abuse_data = lookup_ip(ip)
                     alert = Alert(
                         amount=round(amount, 2),
                         fraud_score=round(fraud_score, 4),
@@ -73,14 +77,19 @@ async def run_simulator(manager, db_session_factory):
                         severity=severity,
                         mitre_tag=mitre_tag,
                         source="ml_model",
-                        ip_address=random.choice(FAKE_IPS),
+                        ip_address=ip,
                         account_id=f"ACC{random.randint(1000,9999)}",
                         shap_json=shap_json,
-                        status="open"
+                        status="open",
+                        abuse_score=abuse_data["abuse_score"] if abuse_data else None,
+                        country=abuse_data["country"] if abuse_data else None,
+                        isp=abuse_data["isp"] if abuse_data else None
                     )
                     db.add(alert)
                     db.commit()
                     db.refresh(alert)
+                    if alert.severity.lower() in ("critical", "high"):
+                        send_slack_alert(alert)
 
                     await manager.broadcast({
                         "type": "new_alert",

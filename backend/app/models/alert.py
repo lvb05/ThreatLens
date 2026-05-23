@@ -8,14 +8,18 @@ class Alert(Base):
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
+
     amount = Column(Float, nullable=False)
     fraud_score = Column(Float, nullable=False)
     attack_type = Column(String, nullable=False)
-    severity = Column(String, nullable=False)   # low, medium, high, critical
+    severity = Column(String, nullable=False)
     mitre_tag = Column(String, nullable=True)
-    status = Column(String, default="open")     # open, investigating, resolved
-    source = Column(String, default="ml_model") # ml_model, wazuh
-    shap_json = Column(Text, nullable=True)      # top 3 SHAP features as JSON
+    source = Column(String, nullable=False)
     ip_address = Column(String, nullable=True)
     account_id = Column(String, nullable=True)
-    abuse_score = Column(Integer, nullable=True) # AbuseIPDB score Phase 4
+    shap_json = Column(Text, nullable=True)
+    status = Column(String, default="open")
+
+    abuse_score = Column(Integer, nullable=True)
+    country = Column(String, nullable=True)
+    isp = Column(String, nullable=True)

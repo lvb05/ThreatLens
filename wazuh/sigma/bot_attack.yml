@@ -1,0 +1,20 @@
+title: UPI Bot Attack Pattern
+id: upi-bot-005
+status: experimental
+description: Detects bot-driven fraud via low-value high-frequency transactions
+author: ThreatLens
+date: 2026/05/22
+logsource:
+  product: upi
+  service: transactions
+detection:
+  selection:
+    amount|lte: 500
+    fraud_score|gte: 0.65
+  condition: selection
+falsepositives:
+  - Automated payment platforms
+level: medium
+tags:
+  - attack.execution
+  - attack.t1059

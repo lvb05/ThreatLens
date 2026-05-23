@@ -1,0 +1,20 @@
+title: UPI Velocity Abuse
+id: upi-velocity-abuse-003
+status: experimental
+description: Detects rapid burst of transactions from same account within 60 seconds
+author: ThreatLens
+date: 2026/05/22
+logsource:
+  product: upi
+  service: transactions
+detection:
+  selection:
+    transaction_count|gte: 5
+  timeframe: 1m
+  condition: selection
+falsepositives:
+  - Bulk payment systems
+level: high
+tags:
+  - attack.credential_access
+  - attack.t1110

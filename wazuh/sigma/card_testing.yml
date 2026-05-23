@@ -1,0 +1,19 @@
+title: UPI Card Testing Detection
+id: upi-card-testing-001
+status: experimental
+description: Detects card testing via rapid micro-transactions under ₹10
+author: ThreatLens
+date: 2026/05/22
+logsource:
+  product: upi
+  service: transactions
+detection:
+  selection:
+    amount|lt: 10
+  condition: selection
+falsepositives:
+  - Legitimate low-value merchant testing
+level: high
+tags:
+  - attack.credential_access
+  - attack.t1133

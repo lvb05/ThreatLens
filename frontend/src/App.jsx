@@ -180,6 +180,9 @@ function AlertDetail({ alert, onClose, onStatusChange }) {
           ["Account", alert.account_id || "—"],
           ["IP Address", alert.ip_address || "—"],
           ["Status", alert.status],
+          ["Abuse Score", alert.abuse_score ?? "N/A"],
+          ["Country", alert.country || "Unknown"],
+          ["ISP", alert.isp || "Unknown"],
         ].map(([k, v]) => (
           <div key={k} style={{
             background: "#0d1117", borderRadius: 8,
@@ -238,7 +241,7 @@ function AlertDetail({ alert, onClose, onStatusChange }) {
           padding: 14,
           marginBottom: 16
         }}>
-          
+
       <div style={{
         fontSize: 12,
         color: "#a78bfa",
