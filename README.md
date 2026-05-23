@@ -313,6 +313,10 @@ ThreatLens detects:
 
 #### Dashboard
 ![alerts](screenshots/velocity_abuse.png)
+
+#### Wazuh Alerts
+![alerts](screenshots/wazuh-dashboard.png)
+
 #### Slack Alerts
 ![Slack Alerts](screenshots/slack_alert.png)
 
