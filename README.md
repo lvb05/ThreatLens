@@ -7,10 +7,8 @@
 [![GitHub](https://img.shields.io/badge/GitHub-ThreatLens-a78bfa?style=for-the-badge)](https://github.com/lvb05/ThreatLens)
 
 ---
-#### Demo video
-![](screenshots/threatlens.mp4)
 
----
+
 #### Dashboard
 ![](screenshots/card_testing.png)
 ---
@@ -34,8 +32,14 @@ It combines:
 This project simulates how a real SOC handles financial fraud incidents from detection to response.
 
 ---
+##### Watch Here
 
-## ✨ Key Features
+[![.Demo]()](https://your-video-link)
+
+---
+
+
+## Key Features
 
 ### 🔍 Fraud Detection Engine
 - XGBoost-based fraud detection model
