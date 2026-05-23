@@ -29,7 +29,7 @@ It combines:
 - **Automated PDF reporting**
 - **Slack critical alerting**
 
-This project simulates how a real SOC handles financial fraud incidents from detection to response.
+> This project simulates how a real SOC handles financial fraud incidents from detection to response.
 
 ---
 
@@ -305,7 +305,7 @@ ThreatLens detects:
 - Account Takeover
 - Bot Activity
 
-Mapped to MITRE ATT&CK techniques for security analyst visibility.
+> Mapped to MITRE ATT&CK techniques for security analyst visibility.
 
 ---
 
