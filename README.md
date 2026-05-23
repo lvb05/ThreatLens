@@ -32,9 +32,21 @@ It combines:
 This project simulates how a real SOC handles financial fraud incidents from detection to response.
 
 ---
+
+## 🌐 Live Deployment
+
+Frontend:
+https://threat-lens-weld.vercel.app
+
+Backend API:
+https://threatlens-em87.onrender.com/docs
+
+---
+
+
 ##### Watch Here
 
-[![.Demo]()](https://your-video-link)
+Video-![Demo](screenshots/threatlens.mp4)
 
 ---
 
@@ -310,18 +322,3 @@ Mapped to MITRE ATT&CK techniques for security analyst visibility.
 
 ---
 
-
-## 🌐 Live Deployment
-
-Frontend:
-https://threat-lens-weld.vercel.app
-
-Backend API:
-https://threatlens-em87.onrender.com/docs
-
----
-
-
-## License
-
-MIT License
