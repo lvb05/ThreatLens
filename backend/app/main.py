@@ -4,6 +4,7 @@ from app.core.database import Base, engine, SessionLocal
 from app.core.websocket_manager import manager
 from app.routes import alerts
 import asyncio
+import os
 
 Base.metadata.create_all(bind=engine)
 
@@ -25,9 +26,12 @@ app.include_router(alerts.router)
 
 @app.on_event("startup")
 async def startup_event():
-    from app.services.simulator import run_simulator
-    asyncio.create_task(run_simulator(manager, SessionLocal))
-    print("[ThreatLens] API started. Simulator running.")
+    print("[ThreatLens] API started.")
+
+    if os.getenv("ENV") != "production":
+        from app.services.simulator import run_simulator
+        asyncio.create_task(run_simulator(manager, SessionLocal))
+        print("[ThreatLens] Simulator running.")
 
 @app.websocket("/ws/alerts")
 async def websocket_alerts(websocket: WebSocket):
