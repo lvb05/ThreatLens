@@ -293,7 +293,7 @@ Mapped to MITRE ATT&CK techniques for security analyst visibility.
 Add screenshots here:
 
 ```md
-![Dashboard](screenshots/dashboard.png)
+![Slack Alerts](screenshots/slack_alert.png)
 ```
 
 Example:
