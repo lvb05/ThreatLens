@@ -7,6 +7,14 @@
 [![GitHub](https://img.shields.io/badge/GitHub-ThreatLens-a78bfa?style=for-the-badge)](https://github.com/lvb05/ThreatLens)
 
 ---
+#### Demo video
+![](screenshots/threatlens.mp4)
+
+---
+#### Dashboard
+![](screenshots/card_testing.png)
+---
+
 
 ## 🚀 Overview
 
