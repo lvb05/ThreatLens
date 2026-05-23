@@ -19,6 +19,7 @@ pandas==3.0.3
 pillow==12.2.0
 psycopg2-binary==2.9.12
 pydantic==2.13.4
+pydantic-settings==2.7.0
 pydantic_core==2.46.4
 python-dateutil==2.9.0.post0
 python-dotenv==1.2.2
@@ -38,4 +39,5 @@ typing_extensions==4.15.0
 tzdata==2026.2
 urllib3==2.7.0
 uvicorn==0.46.0
+websockets==16.0
 xgboost==3.2.0
