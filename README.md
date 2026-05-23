@@ -290,15 +290,8 @@ Mapped to MITRE ATT&CK techniques for security analyst visibility.
 
 ## 📸 Screenshots
 
-Add screenshots here:
 
-```md
 ![Slack Alerts](screenshots/slack_alert.png)
-```
-
-Example:
-
-![Dashboard](screenshots/dashboard.png)
 
 ---
 
