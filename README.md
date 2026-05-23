@@ -156,7 +156,7 @@ AI-powered incident response assistant that provides:
 
 ---
 
-## Tech Stack
+## 🛠️Tech Stack
 
 ### Frontend
 - React
