@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     SECRET_KEY: str = "threatlens-secret"
     CLAUDE_API_KEY: str = ""
+    GROQ_API_KEY: str = ""
     ABUSEIPDB_KEY: str = ""
     SLACK_WEBHOOK_URL: str = ""
     WAZUH_API_URL: str = ""

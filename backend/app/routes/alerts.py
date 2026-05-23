@@ -2,9 +2,15 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.models.alert import Alert
+from app.services.aria_service import analyze_alert
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
+from fastapi.responses import StreamingResponse
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+from io import BytesIO
+import json
 
 router = APIRouter(prefix="/api/v1/alerts", tags=["alerts"])
 
@@ -51,3 +57,92 @@ def update_alert_status(alert_id: str, update: AlertUpdate, db: Session = Depend
     db.commit()
     db.refresh(alert)
     return alert
+
+@router.post("/{alert_id}/analyze")
+def analyze_alert_endpoint(alert_id: str, db: Session = Depends(get_db)):
+    alert = db.query(Alert).filter(Alert.id == alert_id).first()
+
+    if not alert:
+        raise HTTPException(status_code=404, detail="Alert not found")
+
+    analysis = analyze_alert(alert)
+
+    return {"analysis": analysis}
+
+@router.get("/{alert_id}/report")
+def export_pdf_report(alert_id: str, db: Session = Depends(get_db)):
+    alert = db.query(Alert).filter(Alert.id == alert_id).first()
+
+    if not alert:
+        raise HTTPException(status_code=404, detail="Alert not found")
+
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer)
+    styles = getSampleStyleSheet()
+
+    story = []
+
+    story.append(Paragraph("ThreatLens Incident Report", styles["Title"]))
+    story.append(Spacer(1, 20))
+
+    fields = [
+        ("Alert ID", alert.id),
+        ("Timestamp", str(alert.timestamp)),
+        ("Attack Type", alert.attack_type),
+        ("Amount", f"₹{alert.amount}"),
+        ("Fraud Score", str(alert.fraud_score)),
+        ("Severity", alert.severity),
+        ("MITRE Tag", alert.mitre_tag or "N/A"),
+        ("Source", alert.source),
+        ("IP Address", alert.ip_address or "N/A"),
+        ("Account ID", alert.account_id or "N/A"),
+        ("Status", alert.status),
+    ]
+
+    for label, value in fields:
+        story.append(Paragraph(f"<b>{label}:</b> {value}", styles["BodyText"]))
+        story.append(Spacer(1, 8))
+
+    story.append(Spacer(1, 12))
+    story.append(Paragraph("SHAP Explanation", styles["Heading2"]))
+    story.append(Spacer(1, 8))
+
+    if alert.shap_json:
+        try:
+            shap_data = json.loads(alert.shap_json)
+
+            for item in shap_data:
+                story.append(
+                    Paragraph(
+                        f"{item['feature']} → {item['shap_value']} ({item['direction']})",
+                        styles["BodyText"]
+                    )
+                )
+                story.append(Spacer(1, 6))
+        except:
+            story.append(Paragraph("Unable to parse SHAP explanation.", styles["BodyText"]))
+    else:
+        story.append(Paragraph("No SHAP explanation available.", styles["BodyText"]))
+
+    story.append(Spacer(1, 16))
+    story.append(Paragraph("ARIA AI Analyst Summary", styles["Heading2"]))
+    story.append(Spacer(1, 8))
+
+    from app.services.aria_service import analyze_alert
+    analysis = analyze_alert(alert)
+
+    for line in analysis.split("\n"):
+        if line.strip():
+            story.append(Paragraph(line, styles["BodyText"]))
+            story.append(Spacer(1, 4))
+
+    doc.build(story)
+    buffer.seek(0)
+
+    return StreamingResponse(
+        buffer,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f"attachment; filename=ThreatLens_Report_{alert.id}.pdf"
+        },
+    )

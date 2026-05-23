@@ -117,6 +117,8 @@ function AlertDetail({ alert, onClose, onStatusChange }) {
   if (!alert) return null
   const c = SEVERITY_COLOR[alert.severity] || SEVERITY_COLOR.low
   const [updating, setUpdating] = useState(false)
+  const [ariaAnalysis, setAriaAnalysis] = useState("")
+  const [ariaLoading, setAriaLoading] = useState(false)
 
   const handleStatus = async (newStatus) => {
     setUpdating(true)
@@ -128,6 +130,29 @@ function AlertDetail({ alert, onClose, onStatusChange }) {
       })
       if (res.ok) onStatusChange(alert.id, newStatus)
     } finally { setUpdating(false) }
+  }
+
+  const handleARIA = async () => {
+    setAriaLoading(true)
+
+    try {
+      const res = await fetch(`${API}/api/v1/alerts/${alert.id}/analyze`, {
+        method: "POST"
+      })
+
+      const data = await res.json()
+      setAriaAnalysis(data.analysis || "No analysis returned.")
+
+    } catch (err) {
+      setAriaAnalysis("ARIA failed to analyze this alert.")
+
+    } finally {
+      setAriaLoading(false)
+    }
+  }
+
+  const handlePDFExport = () => {
+    window.open(`${API}/api/v1/alerts/${alert.id}/report`, "_blank")
   }
 
   return (
@@ -167,6 +192,72 @@ function AlertDetail({ alert, onClose, onStatusChange }) {
       </div>
 
       <ShapChart shapJson={alert.shap_json} />
+
+      <div style={{ marginBottom: 14 }}>
+        <button
+          onClick={handleARIA}
+          disabled={ariaLoading}
+          style={{
+            width: "100%",
+            padding: "10px",
+            borderRadius: 8,
+            border: "none",
+            background: "#7c3aed",
+            color: "white",
+            fontWeight: 600,
+            cursor: "pointer"
+          }}
+        >
+          {ariaLoading ? "ARIA Analyzing..." : "Analyze with ARIA"}
+        </button>
+      </div>
+
+      <div style={{ marginBottom: 14 }}>
+        <button
+          onClick={handlePDFExport}
+          style={{
+            width: "100%",
+            padding: "10px",
+            borderRadius: 8,
+            border: "none",
+            background: "#2563eb",
+            color: "white",
+            fontWeight: 600,
+            cursor: "pointer"
+          }}
+        >
+          Export PDF Incident Report
+        </button>
+      </div>
+
+      {ariaAnalysis && (
+        <div style={{
+          background: "#0d1117",
+          border: "1px solid #1f2937",
+          borderRadius: 8,
+          padding: 14,
+          marginBottom: 16
+        }}>
+          
+      <div style={{
+        fontSize: 12,
+        color: "#a78bfa",
+        marginBottom: 8,
+        fontWeight: 600
+      }}>
+        ARIA AI ANALYST REPORT
+      </div>
+
+      <div style={{
+        whiteSpace: "pre-wrap",
+        fontSize: 12,
+        color: "#d1d5db",
+        lineHeight: 1.6
+      }}>
+        {ariaAnalysis}
+      </div>
+    </div>
+  )}
 
       <div style={{ marginBottom: 12 }}>
         <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 8 }}>Update Status</div>
