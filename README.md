@@ -310,15 +310,6 @@ Mapped to MITRE ATT&CK techniques for security analyst visibility.
 
 ---
 
-## 🎥 Demo Video
-
-For YouTube:
-
-```md
-[Watch Demo Video](https://youtube.com/your-link)
-```
-
----
 
 ## 🌐 Live Deployment
 
