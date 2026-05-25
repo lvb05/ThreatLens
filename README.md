@@ -193,6 +193,18 @@ AI-powered incident response assistant that provides:
 
 ---
 
+### Dataset
+
+The ML model is trained on the [Credit Card Fraud Detection dataset](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud) from Kaggle.
+
+1. Download `creditcard.csv` from the link above
+2. Place it at `ml/creditcard.csv`
+3. Run `python ml/train_model.py` — this generates `fraud_model.pkl` and `shap_explainer.pkl`
+
+> **Note:** The pre-trained model files (`fraud_model.pkl`, `shap_explainer.pkl`) are already committed to the repo, so you can skip training and run the backend directly.
+
+---
+
 ## 📂 Project Structure
 
 ```bash
