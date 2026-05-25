@@ -41,10 +41,11 @@ https://threat-lens-weld.vercel.app
 Backend API:
 https://threatlens-em87.onrender.com/docs
 
+---
 
-
-> Video-[Demo](screenshots/threatlens.mp4)
-
+### 🎥 Demo
+[![Watch Demo]()](screenshots/threatlens.mp4)
+> Click to watch the 3-min walkthrough
 ---
 
 
